@@ -783,77 +783,6 @@ code {
   color: #ff9584;
 }
 
-.workflow-help-section {
-  padding-top: 32px;
-}
-
-.workflow-help {
-  border-top: 1px solid var(--ink);
-  border-bottom: 1px solid var(--ink);
-}
-
-.workflow-help summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 20px 0;
-  cursor: pointer;
-  list-style: none;
-}
-
-.workflow-help summary::-webkit-details-marker {
-  display: none;
-}
-
-.workflow-help summary:focus-visible {
-  outline: 2px solid var(--orange);
-  outline-offset: 4px;
-}
-
-.workflow-help summary::after {
-  color: var(--orange);
-  content: "+";
-  font-family: var(--font-mono);
-  font-size: 1.4rem;
-  font-weight: 700;
-}
-
-.workflow-help[open] summary::after {
-  content: "−";
-}
-
-.workflow-help summary > span {
-  font-size: 1rem;
-  font-weight: 800;
-}
-
-.workflow-help summary small {
-  margin-left: auto;
-  color: var(--muted);
-  font-size: 0.78rem;
-  font-weight: 400;
-}
-
-.workflow-help-grid {
-  display: grid;
-  gap: 12px;
-  padding: 0 0 24px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.workflow-help-grid p {
-  margin-bottom: 0;
-  color: var(--muted);
-  font-size: 0.85rem;
-}
-
-.workflow-help-grid strong {
-  display: block;
-  margin-bottom: 4px;
-  color: var(--ink);
-}
-
 .submission-section {
   padding-top: clamp(48px, 6vw, 64px);
 }
@@ -1532,18 +1461,6 @@ code {
   .field-grid {
     gap: 0;
     grid-template-columns: 1fr;
-  }
-
-  .workflow-help-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .workflow-help summary {
-    align-items: flex-start;
-  }
-
-  .workflow-help summary small {
-    display: none;
   }
 
   .form-footer,
