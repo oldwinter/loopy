@@ -293,6 +293,15 @@ python3 -m json.tool scripts/seo-geo-query-benchmark.json >/dev/null
 git diff --check
 ```
 
+### Configure voting
+
+Voting is stored in a dedicated SQLite Durable Object. Reading totals is
+public, but casting, changing, or removing a vote requires a GitHub login.
+Set `SESSION_SECRET` and the GitHub OAuth client credentials as Worker
+secrets; use `worker/.dev.vars.example` for local variable names only. Register
+the canonical callbacks shown in `AGENTS.md`, then deploy the Worker before the
+site shell because the shell calls the new auth and vote routes.
+
 Read [AGENTS.md](AGENTS.md) before editing loops or publishing the site. It
 contains the source-of-truth rules for database publishing, generated
 responses, form security, and clean-main deployments.
