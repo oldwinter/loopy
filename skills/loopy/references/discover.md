@@ -1,72 +1,43 @@
 # Loop Discovery
 
-Use this workflow when the user asks to mine a codebase, coding-thread history,
-or both for work that should become a loop.
+当用户要求从代码库、编码线程历史或两者中挖掘应该成为 loop 的工作时，使用这个工作流。
 
-## Inspect the evidence
+## 检查证据
 
-1. Confirm the smallest discoverable scope from the request. Inspect the current
-   repository when it is clearly in scope. Use available thread listing, search,
-   and reading tools only for coding threads the user authorized. If thread
-   history is unavailable, continue with codebase evidence and disclose the
-   limitation.
-2. In code, inspect the operational paths that reveal recurring work: scripts,
-   CI and deployment configuration, maintenance commands, tests, contributor
-   instructions, issue templates, runbooks, and repeated lifecycle patterns.
-   Similar-looking functions alone are a refactoring signal, not proof of a
-   loop.
-3. In threads, identify completed actions and their outcomes. Group semantically
-   equivalent work even when the wording differs. Count distinct occurrences,
-   not repeated discussion of the same occurrence. Record a compact source
-   handle such as a thread title or identifier and the action performed; do not
-   copy secrets or unnecessary private content.
-4. Corroborate thread claims against the repository or runtime when practical.
-   Thread history can be stale, incomplete, or mistaken.
+1. 从请求中确认最小可发现范围。当当前仓库明显在范围内时检查它。只对用户授权的编码线程使用可用的线程列表、
+   搜索和读取工具。如果线程历史不可用，继续使用代码库证据，并说明这一限制。
+2. 在代码中检查能暴露重复工作的操作路径：脚本、CI 和部署配置、维护命令、测试、贡献者说明、issue 模板、
+   runbook，以及重复的生命周期模式。仅仅相似的函数是重构信号，不是 loop 证据。
+3. 在线程中识别已完成动作及其结果。即使措辞不同，也要归组语义等价的工作。计算不同发生次数，
+   不要把同一次发生的反复讨论重复计数。记录紧凑来源标识，例如线程标题或 identifier 和执行过的动作；
+   不要复制秘密或不必要的私有内容。
+4. 可行时，用仓库或运行时证据交叉验证线程主张。线程历史可能过时、不完整或有误。
 
-## Qualify and rank candidates
+## 判断并排序候选项
 
-A repeated task is not automatically a good loop. Require the candidate to
-follow the feedback-cycle and validation rules in `SKILL.md`, not merely to
-appear multiple times in code or thread history.
+重复任务不会自动成为好 loop。要求候选项遵守 `SKILL.md` 中的反馈循环和验证规则，
+而不是只因为它在代码或线程历史中多次出现。
 
-A candidate is loop-shaped only when all of these are present or can be derived
-from scoped evidence:
+候选项只有在以下内容都存在，或能从范围内证据推导出来时，才算具有 loop 形状：
 
-- a recurring event or state to observe;
-- a next action that can change in response to fresh feedback;
-- an observable check for whether the action helped;
-- a bounded scope and a success, no-op, blocked, approval-required, or
-  no-progress stop as appropriate.
+- 一个可观察的重复事件或状态；
+- 一个会因新反馈而改变的下一步动作；
+- 一个判断动作是否有帮助的可观察检查；
+- 有边界的范围，以及适当的 success、no-op、blocked、approval-required 或 no-progress stop。
 
-Require at least two distinct occurrences before describing a thread-derived
-task as repeated. A codebase pattern without run history may be reported as a
-potential loop, but not as proven recurrent. Reject one-shot migrations,
-straight-line checklists, vague goals, and tasks where another pass receives no
-new evidence.
+在把线程衍生任务称为重复之前，至少要求两个不同发生。没有运行历史的代码库模式可以报告为潜在 loop，
+但不能报告为已证明的重复工作。拒绝一次性迁移、直线式 checklist、模糊目标，以及下一轮不会得到新证据的任务。
 
-Rank qualified candidates by evidence of recurrence, time or failure cost,
-quality of available feedback, reversibility, and safe authority. Do not invent
-frequency, effort saved, owners, schedules, metrics, or permissions. Prefer the
-smallest high-value loop over a broad loop that bundles unrelated work.
+按复发证据、时间或失败成本、可用反馈质量、可逆性和安全权限给合格候选项排序。不要编造频率、节省的努力、
+负责人、计划、指标或权限。优先选择最小且高价值的 loop，而不是把无关工作捆在一起的宽泛 loop。
 
-## Convert the best candidate
+## 转换最佳候选项
 
-1. Search the live catalog using the candidate's outcome, trigger, action, and
-   verification terms. Adapt a strong published match instead of duplicating
-   it. If the catalog is unavailable, continue with an explicitly unpublished
-   design and disclose that duplication could not be checked.
-2. If several candidates are similarly strong or differ materially in
-   authority, show a short ranked slate and ask the user which one to convert.
-   Otherwise convert the strongest candidate directly.
-3. Derive the trigger, fresh observation, bounded action, reproducible
-   verification, record, and terminal behavior from the evidence. Apply every
-   design rule in `SKILL.md`; do not weaken the standard because recurrence is
-   well documented. Ask one short question only when a missing decision would
-   materially change safety or success.
-4. Run the mandatory crafted-loop preflight in `SKILL.md`. Repair material
-   weaknesses before delivery without expanding authority or inventing missing
-   details.
-5. Return the compact evidence and the loop using the standard delivery format
-   in `SKILL.md`. Label it as an unpublished design or adaptation. If no
-   candidate qualifies, report a clean no-op and explain the missing feedback
-   or recurrence evidence; do not manufacture a loop.
+1. 使用候选项的结果、触发条件、动作和验证术语搜索实时目录。优先改写强匹配的已发布 loop，而不是重复创建。
+   如果目录不可用，继续输出明确未发布的设计，并说明无法检查重复。
+2. 如果几个候选项同样强，或权限差异很大，展示一个简短排序列表并询问用户要转换哪一个。否则直接转换最强候选项。
+3. 从证据中推导触发条件、新观察、有界动作、可复现验证、记录和终止行为。应用 `SKILL.md` 中每条设计规则；
+   不要因为重复证据充分就降低标准。只有当缺失决策会实质改变安全或成功时，才问一个简短问题。
+4. 运行 `SKILL.md` 中强制的 crafted-loop 预检。在交付前修复实质弱点，不扩大权限，也不编造缺失细节。
+5. 使用 `SKILL.md` 中的标准交付格式返回紧凑证据和 loop。标记它是未发布设计或改写版本。如果没有候选项合格，
+   报告干净无操作，并说明缺失的反馈或复发证据；不要制造 loop。

@@ -1,53 +1,31 @@
 # Prepare or Publish a Loop
 
-Use this workflow when the user asks Loopy to share, submit, or publish a loop
-to Loop Library. Preparing content is distinct from performing the external
-submission.
+当用户要求 Loopy 将 loop 分享、提交或发布到 Loop Library 时，使用这个工作流。准备内容不同于执行外部提交。
 
-## Prepare the candidate
+## 准备候选项
 
-1. Resolve the exact loop and its author or contributor attribution. Do not
-   invent ownership, dates, source links, results, or claims.
-2. Run the crafted-loop preflight in `SKILL.md`. Require a real feedback cycle,
-   reproducible verification, bounded actions, explicit stops, and approval
-   boundaries where needed.
-3. Search the live catalog by outcome, trigger, verification, keywords, and
-   related workflows. Prefer contributing an adaptation or improvement when a
-   strong match already exists. If the catalog is unavailable, stop before
-   submission because duplication cannot be checked.
-4. Prepare the fields required by the current official submission surface or,
-   when working in the Loop Library repository, the current schema and example
-   record. Validate with repository tooling when available. Keep the public
-   prompt compact; place optional long-form guidance in supported secondary
-   fields rather than bloating the prompt.
-5. Show the exact proposed record, destination, attribution, and requested
-   state. Clearly distinguish a public suggestion, an owner-only draft, and a
-   public publication. For a public suggestion, also show the exact current
-   ownership and license attestation required by the official surface.
+1. 解析精确 loop 及其作者或贡献者归属。不要编造所有权、日期、来源链接、结果或声明。
+2. 运行 `SKILL.md` 中的 crafted-loop 预检。要求真实反馈循环、可复现验证、有界动作、明确停止点，以及必要时的批准边界。
+3. 按结果、触发条件、验证、keywords 和相关工作流 搜索实时目录。当强匹配已存在时，优先贡献改写或改进。
+   如果目录不可用，在提交前停止，因为无法检查重复。
+4. 准备当前官方提交入口需要的字段；如果在 Loop Library 仓库中工作，则准备当前 schema 和示例记录需要的字段。
+   可用时用仓库工具验证。保持公开提示词紧凑；把可选的长篇指导放入受支持的 secondary fields，而不是让提示词膨胀。
+5. 展示精确提议记录、目的地、归属和请求状态。清楚区分 public suggestion、owner-only draft 和 public publication。
+   对于 public suggestion，还要展示官方入口要求的精确当前所有权和许可声明。
 
-## Require approval and read back
+## 要求批准并读回
 
-- Do not send a suggestion, save an owner draft, or publish publicly without
-  explicit approval of the preview.
-- Never set a public suggestion's permission or attestation field from generic
-  approval to submit. Require the user to explicitly confirm the exact current
-  ownership and license terms shown in the preview.
-- Use only official submission or authenticated owner tools already available
-  in scope. Never expose owner credentials or bypass validation.
-- Default an authorized owner action to a draft unless the user explicitly
-  approves public publication. Approval to save a draft is not approval to
-  publish it.
-- For a public suggestion, treat the official surface's successful acceptance
-  response as the receipt. Do not invent an identifier or claim that the
-  owner-only suggestion was saved, reviewed, drafted, or published.
-- For an owner draft, read back its identifier and draft status. For public
-  publication, verify the live detail page and catalog entry before reporting
-  success. Report validation, authorization, or required readback failures as
-  blocked.
+- 没有对预览的明确批准，不要发送 suggestion、保存 owner draft 或公开发布。
+- 绝不要从泛泛的提交批准中设置 public suggestion 的 permission 或 attestation 字段。要求用户明确确认预览中展示的精确当前所有权和许可条款。
+- 只使用范围内已经可用的官方提交或已认证 owner 工具。绝不暴露 owner credentials 或绕过验证。
+- 已授权的 owner 动作默认保存为 draft，除非用户明确批准 public publication。批准保存草稿不等于批准发布它。
+- 对于 public suggestion，把官方入口的成功接受响应视为回执。不要编造 identifier，也不要声称 owner-only suggestion 已保存、审阅、起草或发布。
+- 对于 owner draft，读回其 identifier 和 draft 状态。对于 public publication，在报告成功前验证实时详情页和目录条目。
+  把验证、授权或必要读回失败报告为 blocked。
 
-## Return the preview or receipt
+## 返回预览或回执
 
-Before approval, return:
+批准前返回：
 
 ```markdown
 ## Loopy publication preview
@@ -59,7 +37,5 @@ Attestation: [exact current ownership/license terms, or Not applicable]
 Candidate: [exact record or concise field-by-field preview]
 ```
 
-After an approved public suggestion, return the acceptance response and state
-only that the suggestion was received. After an owner action, return the
-resulting identifier, state, and required readback evidence. Do not call a
-prepared preview or accepted suggestion “published.”
+批准 public suggestion 后，返回接受响应，并只说明 suggestion 已收到。owner action 后，返回产生的 identifier、state
+和必要读回证据。不要把 prepared preview 或 accepted suggestion 称为 “published”。

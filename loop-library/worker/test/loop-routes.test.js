@@ -216,7 +216,7 @@ function exampleLoop(overrides = {}) {
     description: "A complete loop used to test database-backed publishing.",
     category: "engineering",
     featured: false,
-    categoryLabel: "AI agent workflow",
+    categoryLabel: "AI agent 工作流",
     author: "Test Publisher",
     published: "2026-06-21",
     modified: "2026-06-21",
@@ -345,10 +345,10 @@ test("renders database content into the canonical homepage and detail page", asy
   );
   const homepageHtml = await homepage.text();
   assert.match(homepageHtml, /The database publishing loop/);
-  assert.match(homepageHtml, /Showing 1 loops/);
+  assert.match(homepageHtml, /显示 1 个 loop/);
   assert.doesNotMatch(homepageHtml, />old</);
   assert.match(homepageHtml, /data-featured="true"/);
-  assert.match(homepageHtml, /class="loop-featured">Featured/);
+  assert.match(homepageHtml, /class="loop-featured">精选/);
   assert.match(
     homepageHtml,
     /data-search="curated overnight on-demand alias"/,
@@ -386,12 +386,9 @@ test("renders database content into the canonical homepage and detail page", asy
     ["BreadcrumbList", "Article", "Organization"],
   );
   const article = detailData["@graph"][1];
-  assert.equal(article.articleSection, "AI agent workflow");
+  assert.equal(article.articleSection, "AI agent 工作流");
   assert.deepEqual(article.keywords, exampleLoop().keywords);
-  assert.equal(
-    detailHtml.match(/aria-label="Loopy skill on GitHub"/g)?.length,
-    2,
-  );
+  assert.equal(detailHtml.match(/aria-label="GitHub 上的 Loopy 技能"/g)?.length, 2);
   for (const href of [
     "feed.xml",
     "catalog.json",
@@ -563,7 +560,7 @@ test("generates catalogs, sitemap, and feed from the same record", async () => {
   for (const [path, expected] of [
     ["catalog.json", '"loopCount":1'],
     ["catalog.md", "The database publishing loop"],
-    ["llms.txt", "Published loops: 1."],
+    ["llms.txt", "已发布 loop 数量：1。"],
     ["sitemap.xml", "/loops/database-publishing-loop/"],
     ["feed.xml", "The database publishing loop"],
   ]) {
@@ -579,18 +576,18 @@ test("generates catalogs, sitemap, and feed from the same record", async () => {
     new Request(`${SITE_ORIGIN}/loop-library/catalog.md`),
     env,
   ).then((response) => response.text());
-  assert.match(markdown, /Plain-text catalog: .*catalog\.txt/);
-  assert.match(markdown, /Agent instructions: .*llms\.txt/);
-  assert.match(markdown, /Generated from the production catalog database/);
-  assert.match(markdown, /Search by outcome, trigger, artifact/);
+  assert.match(markdown, /纯文本目录：.*catalog\.txt/);
+  assert.match(markdown, /Agent 指令：.*llms\.txt/);
+  assert.match(markdown, /从生产目录数据库生成/);
+  assert.match(markdown, /按结果、触发条件、产物/);
 
   const agentInstructions = await handleRequest(
     new Request(`${SITE_ORIGIN}/loop-library/llms.txt`),
     env,
   ).then((response) => response.text());
-  assert.match(agentInstructions, /## Install Loopy/);
+  assert.match(agentInstructions, /## 安装 Loopy/);
   assert.match(agentInstructions, /--skill loopy -g/);
-  assert.match(agentInstructions, /compatibility alias/);
+  assert.match(agentInstructions, /兼容别名/);
   assert.doesNotMatch(agentInstructions, /--skill loop-library/);
 
   const feed = await handleRequest(

@@ -1,9 +1,9 @@
 const CATEGORY_LABELS = {
-  engineering: "Engineering",
-  evaluation: "Evaluation",
-  operations: "Operations",
-  content: "Content",
-  design: "Design",
+  engineering: "工程",
+  evaluation: "评估",
+  operations: "运营",
+  content: "内容",
+  design: "设计",
 };
 
 const REQUIRED_STRINGS = {

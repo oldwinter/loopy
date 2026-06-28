@@ -1,4 +1,4 @@
 interface:
-  display_name: "Loopy (legacy alias)"
-  short_description: "Compatibility alias for the Loopy skill"
-  default_prompt: "Use $loop-library to craft, run, improve, or publish a reliable loop, then use $loopy for future requests."
+  display_name: "Loopy（旧别名）"
+  short_description: "Loopy skill 的兼容别名"
+  default_prompt: "使用 $loop-library 设计、运行、改进或发布可靠 loop；后续请求请使用 $loopy。"

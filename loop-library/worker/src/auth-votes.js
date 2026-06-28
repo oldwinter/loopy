@@ -178,8 +178,8 @@ function oauthStartBridge(requestUrl, env) {
   );
   const bridge = scriptJson({ startUrl: startUrl.toString() });
   const body = `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="referrer" content="no-referrer"><title>Starting GitHub sign-in</title></head>
-<body><p data-auth-status>Starting GitHub sign-in…</p>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="referrer" content="no-referrer"><title>正在启动 GitHub 登录</title></head>
+<body><p data-auth-status>正在启动 GitHub 登录…</p>
 <script>
 const bridge = ${bridge};
 try {
@@ -194,12 +194,12 @@ try {
   fetch(url, { headers: { Accept: "application/json" } })
     .then(async (response) => {
       const result = await response.json();
-      if (!response.ok || !result.authorizationUrl) throw new Error("GitHub sign-in is unavailable.");
+      if (!response.ok || !result.authorizationUrl) throw new Error("GitHub 登录暂时不可用。");
       location.replace(result.authorizationUrl);
     })
-    .catch(() => { document.querySelector("[data-auth-status]").textContent = "GitHub sign-in is unavailable. Please try again."; });
+    .catch(() => { document.querySelector("[data-auth-status]").textContent = "GitHub 登录暂时不可用。请重试。"; });
 } catch {
-  document.querySelector("[data-auth-status]").textContent = "GitHub sign-in is unavailable in this browser.";
+  document.querySelector("[data-auth-status]").textContent = "此浏览器无法使用 GitHub 登录。";
 }
 </script></body></html>`;
   return new Response(body, {
@@ -567,8 +567,8 @@ function authBridge(destination, payload = {}, invalidStateDestination = destina
   });
   const safeDestination = escapeHtml(destination);
   const body = `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="referrer" content="no-referrer"><title>Finishing GitHub sign-in</title></head>
-<body><p>Finishing GitHub sign-in…</p><p><a href="${safeDestination}">Continue</a></p>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="referrer" content="no-referrer"><title>正在完成 GitHub 登录</title></head>
+<body><p>正在完成 GitHub 登录…</p><p><a href="${safeDestination}">继续</a></p>
 <script>
 const bridge = ${bridge};
 let destination = bridge.destination;

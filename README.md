@@ -1,109 +1,93 @@
 # Loop Library
 
-Loop Library has two separate but related parts in this repository:
+本仓库包含两个彼此独立但相关的部分：
 
-| Part | What it is | Where it lives |
+| 部分 | 它是什么 | 位置 |
 | --- | --- | --- |
-| **Loop Library website** | The public catalog where people and agents can browse published loops, read them, and copy their prompts. No installation is required. | [Live website](https://signals.forwardfuture.com/loop-library/) · all website code under [`loop-library/`](loop-library/) (shell in [`loop-library/site/`](loop-library/site/), database and rendering in [`loop-library/worker/`](loop-library/worker/)) |
-| **Loopy skill** | An optional installable guide that helps an AI agent discover, find, audit, repair, craft, run, debrief, or prepare loops for publication. It uses the website's live catalog when recommending or publishing loops. | source in [`skills/loopy/`](skills/loopy/) |
+| **Loop Library 网站** | 公开目录。人和 agent 可以在这里浏览已发布的 loop、阅读说明并复制提示词。无需安装。 | [线上网站](https://signals.forwardfuture.com/loop-library/) · 网站代码都在 [`loop-library/`](loop-library/) 下：shell 在 [`loop-library/site/`](loop-library/site/)，数据库和渲染逻辑在 [`loop-library/worker/`](loop-library/worker/) |
+| **Loopy 技能** | 可选安装的 agent 指南，帮助 AI agent 发现、查找、审计、修复、改写、设计、运行、复盘 loop，或准备发布到目录。它在推荐或发布 loop 时会使用网站的实时目录。 | 源码位于 [`skills/loopy/`](skills/loopy/) |
 
-The website is the library; Loopy is a companion way to work with it. You
-can browse or give an agent the website without installing Loopy. Installing
-Loopy adds the guided workflow, but it does not install or host the website.
+网站就是这个库本身；Loopy 是配套的工作方式。你可以直接浏览网站，
+也可以把网站交给 agent 使用，而不必安装 Loopy。安装 Loopy 会增加
+引导式工作流，但不会安装或托管网站。
 
-Agents that do not have Loopy can use the published
-[agent guide](https://signals.forwardfuture.com/loop-library/agents/),
-[agent instructions](https://signals.forwardfuture.com/loop-library/llms.txt),
-[JSON catalog](https://signals.forwardfuture.com/loop-library/catalog.json), or
-[plain-text catalog](https://signals.forwardfuture.com/loop-library/catalog.txt)
-directly.
+没有 Loopy 的 agent 可以直接使用已发布的
+[agent 指南](https://signals.forwardfuture.com/loop-library/agents/)、
+[agent 指令](https://signals.forwardfuture.com/loop-library/llms.txt)、
+[JSON 目录](https://signals.forwardfuture.com/loop-library/catalog.json)，或
+[纯文本目录](https://signals.forwardfuture.com/loop-library/catalog.txt)。
 
-Each published loop tells an agent what to do, how to check its work, what to
-try next, and when to stop.
+每个已发布的 loop 都会告诉 agent：要做什么、如何检查结果、下一步尝试什么，
+以及什么时候停止。
 
-## What is a loop?
+## 什么是 loop？
 
-Most prompts ask an agent to do something once. A loop gives the agent a way to
-learn from the result and take the next useful step.
+多数提示词 只要求 agent 做一次事。loop 则给 agent 一套方式，让它能从结果中
+学习，并继续采取下一个有用步骤。
 
-For example, a one-shot prompt might say:
+例如，一次性提示词 可能会说：
 
-> Make this website faster.
+> 让这个网站更快。
 
-A loop adds the feedback that makes the work repeatable:
+loop 会加入反馈，让这项工作可以重复执行：
 
-> Find the slowest page, make one focused improvement, and measure it again.
-> Keep the change only if it helps. Repeat until every page meets the target or
-> another pass stops producing a meaningful improvement.
+> 找出最慢的页面，做一个聚焦的改进，然后再次测量。
+> 只有在结果变好时才保留改动。重复执行，直到每个页面都达到目标，
+> 或者下一轮不再产生有意义的改进。
 
-Think of a loop as a playbook with feedback built in. It is useful when the
-first attempt probably will not be the final answer, such as fixing production
-errors, improving test coverage, reviewing a product, or keeping documentation
-current.
+可以把 loop 理解成内置反馈的行动手册。它适合第一次尝试很可能不是最终答案的
+工作，例如修复生产错误、提升测试覆盖率、评审产品，或持续维护文档。
 
-A good loop answers four simple questions:
+一个好的 loop 会回答四个简单问题：
 
-- What is the agent trying to accomplish?
-- How will it know whether the latest attempt worked?
-- What should it do with what it learned?
-- When should it finish or ask for help?
+- agent 要完成什么？
+- 它如何知道最近一次尝试是否有效？
+- 它应该如何使用刚学到的信息？
+- 它什么时候应该结束或请求帮助？
 
-## Why loops are powerful
+## 为什么 loop 有用
 
-AI agents can move quickly, but an open-ended instruction like "keep improving
-this" leaves too much room for guessing. A loop gives the work a clear finish
-line and a consistent way to judge progress.
+AI agent 可以快速行动，但像“持续改进这个”这样的开放指令会留下太多猜测空间。
+loop 为工作提供清晰终点，以及稳定判断进展的方式。
 
-That makes the work easier to trust and easier to repeat. The agent can compare
-results instead of relying on confidence, keep improvements instead of merely
-making changes, and stop when it succeeds or stops making progress. The same
-loop can also be reused by another person or agent without rebuilding the
-workflow from scratch.
+这让结果更可信，也更容易复用。agent 可以比较结果，而不是依赖自信；保留改进，
+而不是只做改动；并在成功或不再有进展时停止。同一个 loop 也可以交给另一个人或
+agent 使用，而无需从零重建工作流。
 
-Loops are not permission for an agent to run forever. The best ones are
-deliberately bounded. They include a real check, a clear stopping point, and a
-moment to hand control back to a person when judgment or approval is needed.
+loop 不是允许 agent 永远运行的许可。最好的 loop 都是有意设边界的。它们包含真实
+检查、明确停止点，以及在需要判断或批准时把控制权交还给人的时刻。
 
-## What Loopy does
+## Loopy 能做什么
 
-Loopy gives your agent direct access to the ideas in the
-library. You can use it to:
+Loopy 让你的 agent 直接使用 Loop Library 里的思路。你可以用它来：
 
-- Discover repeated work in a codebase, coding threads, or both and turn the
-  strongest qualified candidate into a loop.
-- Find a published loop that fits what you are trying to get done.
-- Audit an existing loop for weak checks, unsafe actions, or unclear stopping
-  behavior, then repair only the material problems.
-- Adapt a useful loop to your tools, limits, and definition of success.
-- Interview you about what you want to accomplish and what success looks like,
-  then craft a new loop through a short, plain-language conversation.
-- Run a loop in bounded passes and return a receipt with the actions, evidence,
-  outcome, and stopping reason.
-- Debrief completed runs and recommend the smallest evidence-backed
-  improvement.
-- Check a loop for catalog overlap, prepare a publication draft, and submit it
-  only after you approve the exact preview.
-- Turn the result into a compact prompt you can use right away.
+- 在代码库、编码线程或两者中发现重复工作，并把最强的合格候选项转成 loop。
+- 查找适合当前目标的已发布 loop。
+- 审计现有 loop 是否有薄弱检查、不安全动作或不清晰的停止行为，并且只修复实质问题。
+- 按你的工具、限制和成功定义改写一个有用的 loop。
+- 用简短、直白的对话访谈你想达成什么、成功是什么样子，然后创建新的有界 loop。
+- 在有限轮次中运行 loop，并返回包含动作、证据、结果和停止原因的回执。
+- 复盘已完成的运行，并推荐最小的、由证据支持的改进。
+- 检查 loop 是否与目录重叠，准备发布草稿，并只在你批准精确预览后提交。
+- 把结果转成可以立刻使用的紧凑提示词。
 
-Loopy checks the live catalog when it recommends a published loop. It does
-not quietly start schedules, change production, publish content, or send
-messages on your behalf. Those actions still require the normal permissions
-and approvals.
+Loopy 推荐已发布 loop 时会检查实时目录。它不会悄悄开始计划任务、修改生产环境、
+发布内容或替你发送消息。这些动作仍然需要正常权限和批准。
 
-## Install Loopy
+## 安装 Loopy
 
-You need Node.js and `npx`. Pick the platform you use:
+你需要 Node.js 和 `npx`。请选择你使用的平台：
 
-| Platform | Install command |
+| 平台 | 安装命令 |
 | --- | --- |
-| Codex | `npx skills add Forward-Future/loopy --skill loopy --agent codex -g -y` |
-| Cursor | `npx skills add Forward-Future/loopy --skill loopy --agent cursor -g -y` |
-| Claude Code | `npx skills add Forward-Future/loopy --skill loopy --agent claude-code -g -y` |
+| Codex | `npx skills add oldwinter/loopy --skill loopy --agent codex -g -y` |
+| Cursor | `npx skills add oldwinter/loopy --skill loopy --agent cursor -g -y` |
+| Claude Code | `npx skills add oldwinter/loopy --skill loopy --agent claude-code -g -y` |
 
-To install it for all three at once:
+要一次安装到三个平台：
 
 ```bash
-npx skills add Forward-Future/loopy \
+npx skills add oldwinter/loopy \
   --skill loopy \
   --agent codex \
   --agent cursor \
@@ -111,219 +95,182 @@ npx skills add Forward-Future/loopy \
   -g -y
 ```
 
-Using another agent? Run the interactive installer and choose from the agents
-it detects:
+使用其他 agent？运行交互式安装器，并从它检测到的 agent 中选择：
 
 ```bash
-npx skills add Forward-Future/loopy --skill loopy -g
+npx skills add oldwinter/loopy --skill loopy -g
 ```
 
-The command parts mean:
+命令各部分含义如下：
 
-- `Forward-Future/loopy` is the GitHub repository to install from.
-- `--skill loopy` selects this skill from the repository.
-- `--agent ...` selects the agent that should receive it.
-- `-g` makes it available in all your projects. Leave `-g` off to install it
-  only in the current project.
-- `-y` accepts the install prompts. Leave it off if you want to review the
-  choices interactively.
+- `oldwinter/loopy` 是要从中安装的 GitHub 仓库。
+- `--skill loopy` 从仓库中选择这个 skill。
+- `--agent ...` 选择接收它的 agent。
+- `-g` 让它在所有项目中可用。去掉 `-g` 则只安装到当前项目。
+- `-y` 接受安装提示。去掉它即可交互式检查选项。
 
-If an agent was already open and Loopy does not appear, restart that agent.
+如果某个 agent 已经打开但看不到 Loopy，请重启该 agent。
 
-The previous `loop-library` skill name remains available as a compatibility
-alias for existing installations. Use `loopy` for all new installations and
-explicit invocations.
+之前的 `loop-library` skill 名称仍作为兼容别名保留，以支持已有安装。
+所有新安装和显式调用都应使用 `loopy`。
 
-## Invoke Loopy
+## 调用 Loopy
 
-The slash-command experience differs slightly by platform:
+不同平台的斜杠命令体验略有不同：
 
-- **Codex:** type `/skills`, choose **Loopy**, then enter your request.
-  You can also mention it directly with `$loopy`.
-- **Cursor:** type `/` in Agent chat, search for `loopy`, select it, and
-  add your request. You can also type `/loopy` directly.
-- **Claude Code:** type `/loopy` followed by your request.
+- **Codex：** 输入 `/skills`，选择 **Loopy**，然后输入你的请求。
+  也可以直接用 `$loopy` 提及它。
+- **Cursor：** 在 Agent chat 中输入 `/`，搜索 `loopy`，选中它并加入你的请求。
+  也可以直接输入 `/loopy`。
+- **Claude Code：** 输入 `/loopy`，后接你的请求。
 
-You can also describe a matching task normally. These agents can load the
-Loopy automatically when your request clearly calls for it, but explicit
-invocation is the most predictable way to start.
+你也可以正常描述一个匹配的任务。这些 agent 可以在请求明显适合时自动加载 Loopy，
+但显式调用是最可预测的启动方式。
 
-For example, in Codex you can write:
+例如，在 Codex 中可以这样写：
 
 ```text
-$loopy Analyze this codebase and my coding threads for repeated work, then turn the strongest candidate into a reliable loop.
+$loopy 分析这个代码库和我的编码线程，找出重复工作，并把最强的候选项转成可靠的 loop。
 ```
 
-## Use Loopy
+## 使用 Loopy
 
-You do not need to know loop terminology. Invoke Loopy and say what you
-want to get done. It can take eight paths:
+你不需要懂 loop 术语。调用 Loopy，并说出你想完成什么。它可以走八条路径：
 
-| Path | What it does | Example request |
+| 路径 | 它会做什么 | 示例请求 |
 | --- | --- | --- |
-| **Discover** | Inspects an authorized codebase, coding-thread history, or both for repeated work, then turns the strongest qualified candidate into a bounded loop. | `Analyze this repository and my coding threads for work we have done more than once. Turn the best candidate into a loop.` |
-| **Find** | Searches the live catalog and recommends up to three published loops. It does not run them. | `Find a published loop for keeping our documentation current.` |
-| **Loop Doctor** | Audits a loop you paste or name, explains material weaknesses, and repairs only those problems. | `Audit this loop and repair only material problems: [paste loop]` |
-| **Adapt** | Tailors a useful loop to your real tools, limits, schedule, and definition of success. | `Adapt the Overnight Docs Sweep to this repository and our existing checks.` |
-| **Craft** | Interviews you one question at a time about the outcome, definition of success, scope, checks, and stopping point, then creates a bounded loop when the catalog has no good fit. | `Interview me and help me craft a loop for turning customer feedback into verified fixes.` |
-| **Run** | Executes an identified loop in bounded passes, applies its acceptance check, and returns an evidence-backed receipt. | `Run the Overnight Docs Sweep in this repository.` |
-| **Debrief** | Analyzes one or more completed run receipts and recommends the smallest justified improvement. | `Debrief this run receipt and tell me whether the loop needs to change.` |
-| **Publish** | Checks quality and catalog overlap, prepares an exact publication preview, and submits only after explicit approval. | `Prepare this loop for publication in Loop Library.` |
+| **Discover** | 检查授权范围内的代码库、编码线程历史或两者，寻找重复工作，并把最强的合格候选项转成有边界的 loop。 | `分析这个仓库和我的编码线程，找出我们做过不止一次的工作。把最佳候选项转成一个 loop。` |
+| **Find** | 搜索实时目录并推荐最多三个已发布 loop。它不会运行这些 loop。 | `找一个用于保持文档最新的已发布 loop。` |
+| **Loop Doctor** | 审计你粘贴或点名的 loop，解释实质弱点，并只修复这些问题。 | `审计这个 loop，并只修复实质问题：[粘贴 loop]` |
+| **Adapt** | 从已发布 loop 开始，替换阈值、工具、节奏、负责人或检查，而不削弱反馈循环。 | `把 Overnight Docs Sweep 改写到这个仓库和我们现有检查上。` |
+| **Craft** | 每次问你一个问题，了解结果、成功定义、范围、检查和停止点，然后在目录中没有合适匹配时创建有边界的 loop。 | `访谈我，并帮我设计一个把客户反馈转成已验证修复的 loop。` |
+| **Run** | 在有限轮次中执行指定 loop，应用验收检查，并返回有证据支撑的回执。 | `在这个仓库运行 Overnight Docs Sweep。` |
+| **Debrief** | 分析一个或多个已完成运行回执，并推荐最小且有依据的改进。 | `复盘这个运行回执，告诉我这个 loop 是否需要改变。` |
+| **Publish** | 检查质量和目录重叠，准备精确发布预览，并只在明确批准后提交。 | `准备把这个 loop 发布到 Loop Library。` |
 
-For example, in Claude Code or Cursor:
-
-```text
-/loopy Find a loop for improving test reliability.
-```
-
-In Codex, choose **Loopy** from `/skills`, then send:
+例如，在 Claude Code 或 Cursor 中：
 
 ```text
-Find a loop for improving test reliability.
+/loopy 找一个用于提升测试可靠性的 loop。
 ```
 
-### Discover loops from your work
+在 Codex 中，先从 `/skills` 选择 **Loopy**，然后发送：
 
-Discovery looks for recurring engineering work in the sources you put in
-scope. In a codebase, that can include scripts, CI and deployment configuration,
-tests, runbooks, maintenance commands, and repeated lifecycle patterns. In
-coding threads, it groups equivalent completed work even when the wording
-differs.
+```text
+找一个用于提升测试可靠性的 loop。
+```
 
-Loopy requires at least two distinct thread occurrences before calling work
-repeated. A code pattern without run history is labeled as a potential loop, not
-proven recurrence. It then checks whether fresh feedback can change the next
-action, whether success can be verified, and whether the work has clear limits,
-stopping behavior, and approval boundaries. It also checks the live catalog to
-avoid recreating an existing loop.
+### 从你的工作中发现 loop
 
-Loopy can inspect only repositories and coding threads that your agent can
-access and that you place in scope. If thread history is unavailable, it uses
-the codebase evidence and says so. A discovery result includes compact source
-evidence and either a new loop, an adaptation of a published loop, a short
-candidate slate when your choice matters, or a clean no-op when nothing truly
-fits.
+Discovery 会在你放入范围的来源中寻找反复出现的工程工作。在代码库中，这可能包括脚本、
+CI 和部署配置、测试、runbook、维护命令，以及重复的生命周期模式。在编码线程中，
+它会把语义等价的已完成工作归组，即使措辞不同。
 
-When Loopy finds or creates the right loop, it gives you a prompt to use with
-your agent. You can copy that prompt or explicitly ask Loopy to run it in the
-project you want it to work on. Selecting a loop does not start a run or
-schedule, deploy code, delete data, publish content, send messages, or grant new
-permissions; you must request those actions explicitly.
+Loopy 至少需要两个不同的线程发生过同类工作，才会称其为重复。没有运行历史的代码模式会被
+标记为潜在 loop，而不是已证明的重复工作。随后它会检查新反馈是否能改变下一步动作、成功是否
+可以验证、工作是否有清晰边界、停止行为和批准边界。它还会检查实时目录，以避免重新创建已有 loop。
 
-### Run and improve loops
+Loopy 只能检查你的 agent 能访问、且你放入范围的仓库和编码线程。如果线程历史不可用，
+它会使用代码库证据并说明这一限制。Discovery 结果会包含紧凑来源证据，并返回新 loop、
+已发布 loop 的改写版本、在需要你选择时返回短候选列表，或在没有真正合适内容时干净地不操作。
 
-When asked to run a loop, Loopy re-reads current state, performs one bounded
-action at a time, applies the same acceptance check after each pass, and stops
-at success, a clean no-op, a blocker, an approval boundary, an exhausted limit,
-or no measurable progress. Before acting, it requires a finite run boundary
-supplied by the loop or by you. Its receipt preserves the exact loop definition
-or an immutable reference plus the acceptance conditions, so a later debrief
-can reproduce what ran. Loopy does not create persistent run files unless you
-request them or the project already has an established convention.
+当 Loopy 找到或创建正确的 loop 后，它会给出一个你可以交给 agent 使用的提示词。
+你可以复制该提示词，或明确要求 Loopy 在目标项目中运行它。选择一个 loop 不会启动运行、
+创建计划、部署代码、删除数据、发布内容、发送消息或授予新权限；这些动作必须由你显式请求。
 
-Give that receipt back to Loopy for a debrief. It separates loop-design issues
-from execution, tool, environment, or goal problems and recommends one minimal
-change grounded in the evidence. A single run is treated as one result, not a
-recurring pattern.
+### 运行和改进 loop
 
-### Prepare a loop for publication
+当被要求运行 loop 时，Loopy 会重新读取当前状态，一次执行一个有界动作，在每一轮后应用同一
+验收检查，并在成功、干净无操作、阻塞、需要批准、达到限制或没有可测量进展时停止。行动前，
+它要求 loop 或你提供一个有限运行边界。回执会保留精确的 loop 定义，或不可变引用加上验收条件，
+以便之后的复盘能够复现当时运行的内容。除非你要求，或项目已有明确约定，Loopy 不会创建持久运行文件。
 
-Loopy validates the feedback cycle, checks the live catalog for overlap, and
-prepares the exact candidate and destination for review. It will not send a
-suggestion, save an owner draft, or publish publicly without explicit approval.
-An approved owner action defaults to a draft unless public publication is
-separately approved. Public suggestions return only an acceptance receipt;
-owner drafts and public publications require status readback. Suggestion
-submission also requires separate confirmation of the exact current ownership
-and license attestation shown in the preview.
+把这个回执交回给 Loopy 即可复盘。它会区分 loop 设计问题和执行、工具、环境或目标问题，并推荐一个
+由证据支撑的最小变更。单次运行会被当作一个结果，而不是重复模式。
 
-Every published loop also includes a few useful parts:
+### 准备发布 loop
 
-- **Use when** explains the problem the loop is meant to solve.
-- **Prompt** is the copy-ready instruction for your agent.
-- **Verify** defines the evidence that proves the work succeeded.
-- **Steps** show the feedback cycle in a more readable form.
-- **Notes** call out practical limits, risks, or setup details.
-- **Related loops** point to nearby workflows that may fit better.
+Loopy 会验证反馈循环，检查实时目录中是否有重叠，并准备精确候选记录和目的地供你审阅。
+没有明确批准，它不会发送建议、保存 owner 草稿或公开发布。已授权的 owner 动作默认保存为草稿，
+除非你另行批准公开发布。公开建议只返回接受回执；owner 草稿和公开发布需要读回状态。
+建议提交还需要你单独确认预览中显示的当前所有权和许可声明。
 
-## Explore or contribute
+每个已发布 loop 还包含几个有用部分：
 
-Visit the [Loop Library](https://signals.forwardfuture.com/loop-library/) to
-browse published loops, copy one into your own workflow, or submit a loop that
-has worked well for you.
+- **Use when** 说明这个 loop 要解决的问题。
+- **Prompt** 是可以直接复制给 agent 的指令。
+- **Verify** 定义证明工作成功的证据。
+- **Steps** 用更易读的形式展示反馈循环。
+- **Notes** 说明实际限制、风险或设置细节。
+- **Related loops** 指向可能更合适的相邻工作流。
 
-Loop Library is a [Forward Future](https://www.forwardfuture.com/) project and is
-available under the [MIT License](LICENSE).
+## 浏览或贡献
+
+访问 [Loop Library](https://signals.forwardfuture.com/loop-library/) 来浏览已发布 loop、
+复制到自己的工作流，或提交一个对你有效的 loop。
+
+Loop Library 是 [Forward Future](https://www.forwardfuture.com/) 项目，采用
+[MIT License](LICENSE)。
 
 <details>
-<summary>Notes for maintainers</summary>
+<summary>维护者说明</summary>
 
-### Publish a loop
+### 发布 loop
 
-Public loops are stored in the catalog database attached to the Cloudflare
-Worker. Publishing a reviewed loop does not require a GitHub commit or a static
-site deployment.
+公开 loop 存储在连接到 Cloudflare Worker 的目录数据库中。发布已审阅的 loop 不需要
+GitHub commit 或静态站点部署。
 
-Copy `loop-library/worker/examples/loop.json` somewhere outside the repository,
-fill in the record, and run:
+把 `loop-library/worker/examples/loop.json` 复制到仓库外部，填入记录，然后运行：
 
 ```bash
 LOOP_PUBLISH_TOKEN=... \
   npm --prefix loop-library/worker run loop:publish -- /path/to/loop.json
 ```
 
-The command validates the record and publishes the homepage row, detail page,
-JSON/Markdown/plain-text catalogs, feed, and sitemap from the same database
-write. Use `--draft` to save a non-public record or `--archive` to remove a
-record from public responses without deleting its revision history.
+该命令会验证记录，并从同一次数据库写入发布首页行、详情页、JSON/Markdown/纯文本目录、
+feed 和 sitemap。使用 `--draft` 保存非公开记录，或使用 `--archive` 从公开响应中移除记录，
+同时保留修订历史。
 
-The first database-backed release needs one import from the private migration
-bundle. Loop records and bootstrap data are intentionally not committed to
-GitHub:
+第一次数据库支撑的发布需要从私有迁移包导入一次。loop 记录和 bootstrap 数据有意不提交到 GitHub：
 
 ```bash
 LOOP_PUBLISH_TOKEN=... \
   npm --prefix loop-library/worker run loops:import -- /private/path/bootstrap.json
 ```
 
-Set a long random `LOOP_PUBLISH_TOKEN` as a Worker secret. The catalog uses a
-SQLite-backed Durable Object and keeps an append-only revision for every
-publish. The reviewed bootstrap digest is enforced before the database can be
-activated.
+将一个长随机 `LOOP_PUBLISH_TOKEN` 设置为 Worker secret。目录使用 SQLite 支撑的 Durable Object，
+并为每次发布保留追加式修订。数据库激活前会强制校验已审阅 bootstrap 摘要。
 
-Create a private backup of the current database with:
+创建当前数据库的私有备份：
 
 ```bash
 LOOP_PUBLISH_TOKEN=... \
   npm --prefix loop-library/worker run loops:export -- /private/path/catalog-backup.ndjson
 ```
 
-Restore that snapshot only into a fresh, empty catalog database:
+只把该快照恢复到全新的空目录数据库：
 
 ```bash
 LOOP_PUBLISH_TOKEN=... \
   npm --prefix loop-library/worker run loops:restore -- /private/path/catalog-backup.ndjson
 ```
 
-Bootstrap and backup files must be owner-only (`chmod 600`). Exports include
-drafts, archived records, and complete revision history; keep them outside the
-repository.
+Bootstrap 和备份文件必须仅 owner 可读写（`chmod 600`）。导出包含草稿、归档记录和完整修订历史；
+请把它们保存在仓库外。
 
-The current Git tree contains the site shell and rendering code, but no
-published loop records, generated loop pages, catalogs, feed, sitemap, or
-offline catalog fallback. The legacy catalog and source-attribution metadata
-were already public and intentionally remain in pre-migration Git history;
-this migration does not rewrite repository history or disrupt existing clones.
+当前 Git 树包含站点 shell 和渲染代码，但没有已发布 loop 记录、生成的 loop 页面、目录、feed、
+sitemap 或离线目录 fallback。旧目录和来源归属元数据已经公开，并有意保留在迁移前 Git 历史中；
+这次迁移不会重写仓库历史，也不会破坏现有 clone。
 
-### Preview locally
+### 本地预览
 
 ```bash
 python3 -m http.server 4173 --directory loop-library/site
 ```
 
-Then open `http://localhost:4173`.
+然后打开 `http://localhost:4173`。
 
-### Validate a change
+### 验证改动
 
 ```bash
 npm ci --prefix loop-library/worker
@@ -335,30 +282,23 @@ python3 -m json.tool loop-library/scripts/seo-geo-query-benchmark.json >/dev/nul
 git diff --check
 ```
 
-### Configure voting
+### 配置投票
 
-Voting is stored in a dedicated SQLite Durable Object. Reading totals is
-public, but casting, changing, or removing a vote requires a GitHub login.
-Set `SESSION_SECRET` and the GitHub OAuth client credentials as Worker
-secrets; use `loop-library/worker/.dev.vars.example` for local variable names only. Register
-the canonical callbacks shown in `AGENTS.md`, then deploy the Worker before the
-site shell because the shell calls the new auth and vote routes.
+投票存储在专用 SQLite Durable Object 中。读取总票数是公开的，但投票、改票或撤票需要 GitHub 登录。
+把 `SESSION_SECRET` 和 GitHub OAuth client credentials 设置为 Worker secrets；
+`loop-library/worker/.dev.vars.example` 只用于本地变量名参考。注册 `AGENTS.md` 中给出的规范回调，
+然后先部署 Worker，再部署站点 shell，因为 shell 会调用新的 auth 和 vote routes。
 
-The here.now proxy does not forward browser cookies or mutation Origin headers
-and follows upstream redirects. The OAuth flow therefore uses an HMAC-signed,
-browser-nonce-bound state value and a no-store callback bridge. The bridge saves
-the signed session token in tab-scoped `sessionStorage`; session lookup and vote
-writes send it only inside same-origin JSON request bodies.
+here.now 代理不会转发浏览器 cookie 或 mutation `Origin` headers，并会跟随上游重定向。因此 OAuth 流程
+使用 HMAC 签名、绑定浏览器 nonce 的 state 值，以及 `no-store` callback bridge。该 bridge 会把签名
+session token 保存到标签页级 `sessionStorage`；session 查询和投票写入只在同源 JSON 请求体中发送它。
 
-Auth and proxy changes use a fail-closed staged rollout. Temporarily set
-`VOTING_UI_ENABLED=false` while the Worker and proxy are deployed, then complete
-a GitHub login, nonce-bound callback, session, vote, reload, and logout smoke
-test on the canonical domain. Commit the value as the exact string `true` and
-redeploy only the Worker after the smoke test passes; the already-published site
-will reveal voting without another site publish.
+Auth 和 proxy 变更使用 fail-closed 分阶段发布。部署 Worker 和 proxy 时临时设置
+`VOTING_UI_ENABLED=false`，然后在规范域名上完成 GitHub 登录、nonce-bound callback、session、vote、
+reload 和 logout 冒烟测试。测试通过后，把该值提交为精确字符串 `true`，并只重新部署 Worker；
+已发布站点无需再次发布即可显示投票控件。
 
-Read [AGENTS.md](AGENTS.md) before editing loops or publishing the site. It
-contains the source-of-truth rules for database publishing, generated
-responses, form security, and clean-main deployments.
+编辑 loop 或发布站点前请阅读 [AGENTS.md](AGENTS.md)。它包含数据库发布、生成响应、表单安全和
+clean-main 部署的权威规则。
 
 </details>

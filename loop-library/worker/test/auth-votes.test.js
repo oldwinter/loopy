@@ -296,7 +296,7 @@ test("GitHub OAuth state is verified and X routes are absent", async () => {
   const startBridge = await missingNonce.text();
   assert.match(startBridge, /sessionStorage\.setItem\("ll_oauth_nonce"/);
   assert.match(startBridge, /client_nonce/);
-  assert.match(startBridge, /GitHub sign-in/);
+  assert.match(startBridge, /GitHub 登录/);
 
   const malformedNonce = await handleAuthVoteRoute(
     new Request(`${BASE}/auth/github?client_nonce=too-short`),

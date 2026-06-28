@@ -19,7 +19,7 @@ function applyTheme(theme, persist = false) {
     themeToggle.setAttribute("aria-pressed", String(isDark));
     themeToggle.setAttribute(
       "aria-label",
-      `Switch to ${isDark ? "light" : "dark"} mode`,
+      `切换到${isDark ? "浅色" : "深色"}模式`,
     );
   }
 
@@ -171,7 +171,6 @@ applySort(activeSort);
 
 // Snapshot each row's searchable text before the prompt toggle is injected
 // below. Read the loop content rather than the whole row so search does not
-// match interface controls such as "Copy loop" or "Show more".
 const rowSearchText = new Map(
   loopRows.map((row) => {
     const content = row.querySelector(".cell-loop") ?? row;
@@ -202,7 +201,7 @@ const promptPreviews = loopRows
     button.className = "loop-prompt-toggle";
     button.type = "button";
     button.hidden = true;
-    button.textContent = "Show more";
+    button.textContent = "展开";
     button.setAttribute("aria-controls", prompt.id);
     button.setAttribute("aria-expanded", "false");
     prompt.insertAdjacentElement("afterend", button);
@@ -212,7 +211,7 @@ const promptPreviews = loopRows
       const nextExpanded = !isExpanded;
 
       button.setAttribute("aria-expanded", String(nextExpanded));
-      button.textContent = nextExpanded ? "Show less" : "Show more";
+      button.textContent = nextExpanded ? "收起" : "展开";
       prompt.classList.toggle("is-expanded", nextExpanded);
     });
 
@@ -273,11 +272,11 @@ function updateLibrary() {
   });
 
   if (totalMatches === 0) {
-    resultsCount.textContent = "Showing 0 loops";
+    resultsCount.textContent = "显示 0 个 loop";
   } else if (totalMatches === 1) {
-    resultsCount.textContent = "Showing 1 loop";
+    resultsCount.textContent = "显示 1 个 loop";
   } else {
-    resultsCount.textContent = `Showing ${pageStart + 1}–${pageEnd} of ${totalMatches} loops`;
+    resultsCount.textContent = `显示第 ${pageStart + 1}–${pageEnd} 个，共 ${totalMatches} 个 loop`;
   }
 
   emptyState.hidden = totalMatches !== 0;
@@ -291,7 +290,7 @@ function updateLibrary() {
     pagination.hidden = totalPages <= 1;
     paginationPrevious.disabled = currentPage === 1;
     paginationNext.disabled = currentPage === totalPages;
-    paginationStatus.textContent = `Page ${currentPage} of ${totalPages}`;
+    paginationStatus.textContent = `第 ${currentPage} 页，共 ${totalPages} 页`;
   }
 
   window.requestAnimationFrame(syncVisiblePromptToggles);
@@ -507,7 +506,7 @@ async function copyText(text) {
   textArea.remove();
 
   if (!copied) {
-    throw new Error("Copy is unavailable.");
+    throw new Error("复制不可用。");
   }
 }
 
@@ -515,7 +514,7 @@ function showCopyFallback(button, text) {
   const shareActions = button.closest(".share-actions");
 
   if (!shareActions) {
-    showToast("Copy failed. Copying is unavailable in this browser.");
+    showToast("复制失败。此浏览器不支持复制。");
     return;
   }
 
@@ -526,7 +525,7 @@ function showCopyFallback(button, text) {
     fallback.className = "copy-fallback";
 
     const label = document.createElement("span");
-    label.textContent = "Copy this post manually";
+    label.textContent = "手动复制这条帖子";
 
     const textArea = document.createElement("textarea");
     textArea.setAttribute("readonly", "");
@@ -540,7 +539,7 @@ function showCopyFallback(button, text) {
   textArea.value = text;
   textArea.focus();
   textArea.select();
-  showToast("Copy failed. The post is selected below.");
+  showToast("复制失败。下方已选中帖子内容。");
 }
 
 document.querySelectorAll(".copy-button").forEach((button) => {
@@ -558,14 +557,14 @@ document.querySelectorAll(".copy-button").forEach((button) => {
 
     try {
       await copyText(prompt.replace(/\s+/g, " "));
-      label.textContent = "Copied";
-      showToast("Loop copied to clipboard.");
+      label.textContent = "已复制";
+      showToast("Loop 已复制到剪贴板。");
       window.clearTimeout(copyLabelResetTimer);
       copyLabelResetTimer = window.setTimeout(() => {
         label.textContent = defaultLabel;
       }, 1800);
     } catch {
-      showToast("Copy failed. Select the prompt text instead.");
+      showToast("复制失败。请改为选择提示词文本。");
     }
   });
 });
@@ -586,9 +585,9 @@ document.querySelectorAll("[data-copy-social-post]").forEach((button) => {
 
     try {
       await copyText(socialPost);
-      label.textContent = "Copied!";
+      label.textContent = "已复制";
       button.classList.add("is-copied");
-      showToast("Social post copied to clipboard.");
+      showToast("社交帖子已复制到剪贴板。");
       window.clearTimeout(copyLabelResetTimer);
       copyLabelResetTimer = window.setTimeout(() => {
         label.textContent = defaultLabel;
@@ -658,7 +657,7 @@ async function beginGithubLogin(link) {
     });
     const body = await response.json();
     if (!response.ok || !body.authorizationUrl) {
-      throw new Error(body.error || "GitHub sign-in is unavailable.");
+      throw new Error(body.error || "GitHub 登录暂时不可用。");
     }
     window.location.assign(body.authorizationUrl);
   } catch (error) {
@@ -668,7 +667,7 @@ async function beginGithubLogin(link) {
       // Storage may be unavailable in hardened browser modes.
     }
     link.removeAttribute("aria-disabled");
-    showToast(error.message || "GitHub sign-in is unavailable.");
+    showToast(error.message || "GitHub 登录暂时不可用。");
   }
 }
 
@@ -685,20 +684,20 @@ function createLoginDialog() {
   panel.className = "login-dialog-panel";
   const eyebrow = document.createElement("p");
   eyebrow.className = "eyebrow";
-  eyebrow.textContent = "Community voting";
+  eyebrow.textContent = "社区投票";
   const title = document.createElement("h2");
   title.id = "vote-login-title";
-  title.textContent = "Sign in to vote";
+  title.textContent = "登录后投票";
   const explanation = document.createElement("p");
   explanation.textContent =
-    "Use GitHub. One account gets one vote per loop, and you can change it anytime.";
+    "使用 GitHub 登录。每个账号对每个 loop 有一票，并且可以随时更改。";
   const providers = document.createElement("div");
   providers.className = "login-providers";
 
   const githubLink = document.createElement("a");
   githubLink.className = "login-provider login-provider-github";
   githubLink.href = voteLoginUrl("github");
-  githubLink.textContent = "Continue with GitHub";
+  githubLink.textContent = "使用 GitHub 继续";
   githubLink.addEventListener("click", (event) => {
     event.preventDefault();
     if (githubLink.getAttribute("aria-disabled") === "true") return;
@@ -710,7 +709,7 @@ function createLoginDialog() {
   const cancel = document.createElement("button");
   cancel.className = "login-cancel";
   cancel.type = "button";
-  cancel.textContent = "Not now";
+  cancel.textContent = "暂不";
   cancel.addEventListener("click", () => dialog.close());
   dialog.addEventListener("click", (event) => {
     if (event.target === dialog) dialog.close();
@@ -783,17 +782,17 @@ function renderVoteAccount() {
   account.className = "vote-account";
   account.dataset.voteAccount = "";
   const label = document.createElement("span");
-  label.textContent = `Voting as GitHub: ${voteViewer.username}`;
+  label.textContent = `以 GitHub 身份投票：${voteViewer.username}`;
   const logout = document.createElement("button");
   logout.type = "button";
-  logout.textContent = "Sign out";
+  logout.textContent = "退出登录";
   logout.addEventListener("click", () => {
     clearVoteSessionToken();
     voteViewer = null;
     viewerVotes = {};
     renderVoteAccount();
     clearViewerVoteSelection();
-    showToast("Signed out.");
+    showToast("已退出登录。");
   });
   account.append(label, logout);
 
@@ -810,7 +809,7 @@ async function loadVotes() {
       credentials: "same-origin",
       headers: { Accept: "application/json" },
     });
-    if (!response.ok) throw new Error("Voting unavailable");
+    if (!response.ok) throw new Error("投票暂时不可用");
     const body = await response.json();
     voteViewer = null;
     viewerVotes = {};
@@ -900,14 +899,14 @@ voteControls.forEach((control) => {
           showLoginDialog();
           return;
         }
-        if (!response.ok) throw new Error(body.error || "Vote failed");
+        if (!response.ok) throw new Error(body.error || "投票失败");
         viewerVotes[slug] = body.vote;
         updateVoteControls(control, body.counts, body.vote);
         applySort(activeSort);
         updateLibrary();
-        showToast(body.vote === 0 ? "Vote removed." : "Vote counted.");
+        showToast(body.vote === 0 ? "已撤销投票。" : "投票已记录。");
       } catch (error) {
-        showToast(error.message || "Vote failed. Try again.");
+        showToast(error.message || "投票失败。请重试。");
       } finally {
         control.querySelectorAll(".vote-button").forEach((candidate) => {
           candidate.disabled = false;
@@ -919,7 +918,7 @@ voteControls.forEach((control) => {
 
 const authError = new URLSearchParams(window.location.search).get("auth_error");
 if (authError) {
-  showToast("Sign-in did not finish. Please try again.");
+  showToast("登录未完成。请重试。");
   const cleanUrl = new URL(window.location.href);
   cleanUrl.searchParams.delete("auth_error");
   window.history.replaceState(null, "", cleanUrl);
@@ -943,13 +942,13 @@ if (skillCopyButton && skillInstallCommand) {
 
     try {
       await copyText(command);
-      label.textContent = "Copied";
-      showToast("Install command copied to clipboard.");
+      label.textContent = "已复制";
+      showToast("安装命令已复制到剪贴板。");
       window.setTimeout(() => {
-        label.textContent = "Copy command";
+        label.textContent = "复制命令";
       }, 1800);
     } catch {
-      showToast("Copy failed. Select the install command instead.");
+      showToast("复制失败。请改为选择安装命令。");
     }
   });
 }
@@ -986,10 +985,10 @@ const turnstileWidgets = {
     button: submitButton,
     container: document.querySelector("#loop-turnstile"),
     failureMessage:
-      "Spam protection is temporarily unavailable. Refresh and try again.",
+      "反垃圾验证暂时不可用。请刷新后重试。",
     id: null,
     pendingMessage:
-      "Spam protection is still loading. Wait a moment and try again.",
+      "反垃圾验证仍在加载。请稍等后重试。",
     setStatus: setFormStatus,
     statusElement: formStatus,
     token: "",
@@ -999,10 +998,10 @@ const turnstileWidgets = {
     button: weeklyButton,
     container: document.querySelector("#weekly-turnstile"),
     failureMessage:
-      "Signups are temporarily unavailable. Refresh and try again.",
+      "订阅暂时不可用。请刷新后重试。",
     id: null,
     pendingMessage:
-      "Spam protection is still loading. Wait a moment and try again.",
+      "反垃圾验证仍在加载。请稍等后重试。",
     setStatus: setWeeklyStatus,
     statusElement: weeklyStatus,
     token: "",
@@ -1124,7 +1123,7 @@ function loadTurnstile() {
       if (window.turnstile) {
         resolve(window.turnstile);
       } else {
-        reject(new Error("Spam protection did not initialize."));
+        reject(new Error("反垃圾验证未初始化。"));
       }
     };
 
@@ -1135,7 +1134,7 @@ function loadTurnstile() {
     script.defer = true;
     script.onerror = () => {
       delete window[callbackName];
-      reject(new Error("Spam protection could not be loaded."));
+      reject(new Error("反垃圾验证无法加载。"));
     };
     document.head.append(script);
   });
@@ -1145,7 +1144,7 @@ function loadTurnstile() {
 
 function renderTurnstile(turnstile, widget, siteKey) {
   if (!widget.container || !widget.action) {
-    throw new Error("Spam protection is not configured.");
+    throw new Error("反垃圾验证未配置。");
   }
 
   widget.id = turnstile.render(widget.container, {
@@ -1205,7 +1204,7 @@ async function initializeFormProtection() {
       !config.actions?.weeklySignups
     ) {
       throw new Error(
-        config.error || "Spam protection is temporarily unavailable.",
+        config.error || "反垃圾验证暂时不可用。",
       );
     }
 
@@ -1224,11 +1223,11 @@ async function initializeFormProtection() {
     formProtectionReady = true;
   } catch {
     setFormStatus(
-      "Submissions are temporarily unavailable. Refresh and try again.",
+      "提交暂时不可用。请刷新后重试。",
       "error",
     );
     setWeeklyStatus(
-      "Signups are temporarily unavailable. Refresh and try again.",
+      "订阅暂时不可用。请刷新后重试。",
       "error",
     );
   }
@@ -1241,11 +1240,11 @@ function formatRetryHint(seconds) {
 
   if (seconds < 90) {
     const rounded = Math.max(1, Math.ceil(seconds));
-    return ` Try again in about ${rounded} second${rounded === 1 ? "" : "s"}.`;
+    return ` 请约 ${rounded} 秒后重试。`;
   }
 
   const minutes = Math.max(1, Math.ceil(seconds / 60));
-  return ` Try again in about ${minutes} minute${minutes === 1 ? "" : "s"}.`;
+  return ` 请约 ${minutes} 分钟后重试。`;
 }
 
 async function postProtectedForm(path, body, fallbackMessage) {
@@ -1284,7 +1283,7 @@ if (form && submitButton && submitButtonLabel) {
     if (!form.checkValidity()) {
       form.reportValidity();
       setFormStatus(
-        "Check the required fields and any optional values you entered.",
+        "请检查必填字段和你输入的可选值。",
         "error",
       );
       return;
@@ -1294,7 +1293,7 @@ if (form && submitButton && submitButtonLabel) {
 
     if (performance.now() - formStartedAt < 1200) {
       setFormStatus(
-        "Take a moment to review the loop, then submit it again.",
+        "请花一点时间检查这个 loop，然后再次提交。",
         "error",
       );
       return;
@@ -1302,7 +1301,7 @@ if (form && submitButton && submitButtonLabel) {
 
     if (!formProtectionReady) {
       setFormStatus(
-        "Submissions are temporarily unavailable. Refresh and try again.",
+        "提交暂时不可用。请刷新后重试。",
         "error",
       );
       return;
@@ -1338,7 +1337,7 @@ if (form && submitButton && submitButtonLabel) {
     }
 
     submitButton.disabled = true;
-    submitButtonLabel.textContent = "Sending";
+    submitButtonLabel.textContent = "发送中";
 
     try {
       await postProtectedForm(
@@ -1350,12 +1349,12 @@ if (form && submitButton && submitButtonLabel) {
           idempotency_key: idempotencyKey,
           turnstile_token: turnstileWidgets.suggestions.token,
         },
-        "The suggestion could not be submitted.",
+        "无法提交这个建议。",
       );
 
       form.reset();
       setFormStatus(
-        "Received. The loop is now in the private review queue.",
+        "已收到。这个 loop 已进入私有审阅队列。",
         "success",
       );
       idempotencyKey = makeIdempotencyKey();
@@ -1364,12 +1363,12 @@ if (form && submitButton && submitButtonLabel) {
     } catch (error) {
       resetTurnstile(turnstileWidgets.suggestions);
       setFormStatus(
-        error.message || "Something went wrong. Try again in a moment.",
+        error.message || "出了点问题。请稍后重试。",
         "error",
       );
     } finally {
       submitButton.disabled = !turnstileWidgets.suggestions.token;
-      submitButtonLabel.textContent = "Submit loop";
+      submitButtonLabel.textContent = "提交 loop";
     }
   });
 }
@@ -1381,20 +1380,20 @@ if (weeklyForm && weeklyButton && weeklyButtonLabel) {
 
     if (!weeklyForm.checkValidity()) {
       weeklyForm.reportValidity();
-      setWeeklyStatus("Enter a valid email address.", "error");
+      setWeeklyStatus("请输入有效邮箱地址。", "error");
       return;
     }
 
     const formData = new FormData(weeklyForm);
 
     if (performance.now() - weeklyFormStartedAt < 800) {
-      setWeeklyStatus("Take a moment, then submit again.", "error");
+      setWeeklyStatus("请稍等片刻，然后再次提交。", "error");
       return;
     }
 
     if (!formProtectionReady) {
       setWeeklyStatus(
-        "Signups are temporarily unavailable. Refresh and try again.",
+        "订阅暂时不可用。请刷新后重试。",
         "error",
       );
       return;
@@ -1409,7 +1408,7 @@ if (weeklyForm && weeklyButton && weeklyButtonLabel) {
     }
 
     weeklyButton.disabled = true;
-    weeklyButtonLabel.textContent = "Adding";
+    weeklyButtonLabel.textContent = "添加中";
 
     try {
       await postProtectedForm(
@@ -1422,11 +1421,11 @@ if (weeklyForm && weeklyButton && weeklyButtonLabel) {
           idempotency_key: weeklyIdempotencyKey,
           turnstile_token: turnstileWidgets.weeklySignups.token,
         },
-        "The signup could not be submitted.",
+        "无法提交订阅。",
       );
       weeklyForm.reset();
       setWeeklyStatus(
-        "You’re on the list. Watch your inbox for the best loops.",
+        "你已加入列表。请留意收件箱中的精选 loop。",
         "success",
       );
       weeklyIdempotencyKey = makeIdempotencyKey();
@@ -1435,12 +1434,12 @@ if (weeklyForm && weeklyButton && weeklyButtonLabel) {
     } catch (error) {
       resetTurnstile(turnstileWidgets.weeklySignups);
       setWeeklyStatus(
-        error.message || "Something went wrong. Try again in a moment.",
+        error.message || "出了点问题。请稍后重试。",
         "error",
       );
     } finally {
       weeklyButton.disabled = !turnstileWidgets.weeklySignups.token;
-      weeklyButtonLabel.textContent = "Notify me weekly";
+      weeklyButtonLabel.textContent = "每周通知我";
     }
   });
 }
